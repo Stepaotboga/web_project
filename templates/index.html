@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    <title>Графический калькулятор</title>
+</head>
+<body>
+    <h1>График функции</h1>
+    <div>
+        <label for="function">Введите функцию:</label>
+        <div id="f_inp">
+            <input type="text" id="function" name="function">
+        </div>
+        <button id="display">Отобразить</button>
+        <button id="delete">Удалить</button>
+    </div>
+    <div id="plot-container" class="plot-container">
+        <img src="data:image/png;base64,{{ plot_data.plot_url }}" alt="График функции">
+    </div>
+
+    <script>
+        $('#display').click(function() {
+            var function_str = $('#function').val();
+            $.ajax({
+                type: 'POST',
+                url: '/',
+                data: {
+                    'function': function_str
+                },
+                success: function(data) {
+                    $('#plot-container').html('<img src="data:image/png;base64,' + data.plot_url + '" alt="График функции">');
+                },
+                error: function(data, status, error) {
+                    console.log(data.responseJSON.text_err);
+                    $('#plot-container').html('<img src="data:image/png;base64,' + data.responseJSON.plot_url + '" alt="График функции">');
+                    alert(data.responseJSON.err);
+                }
+            });
+        });
+
+        $('#delete').click(function() {
+            $.ajax({
+                type: 'POST',
+                url: '/',
+                data: {
+                    'delete': true
+                },
+                success: function(data) {
+                    if (data.delete) {
+                        $('#plot-container').html('<img src="data:image/png;base64,' + data.plot_url + '" alt="График функции">');
+                        $('#f_inp').html('<input type="text" id="function" name="function" value="">');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
