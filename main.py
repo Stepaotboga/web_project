@@ -2,9 +2,10 @@ from PIL import Image, ImageDraw, ImageFont
 from math import sqrt, cos, sin, tan, acos, asin, atan, log
 from random import randrange
 
-from flask import Flask, render_template, request, jsonify, url_for, logging
+from flask import Flask, render_template, request, jsonify, url_for, logging, send_from_directory
 
 import io
+import os
 import base64
 
 
@@ -93,8 +94,12 @@ def func(txt):
     txt = txt.split('|')[0]
     return 'y=' + txt
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/graph', methods=['GET', 'POST'])
 def index():
     """Код работы сервера"""
     global plot_data

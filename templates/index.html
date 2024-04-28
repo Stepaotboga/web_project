@@ -24,7 +24,7 @@
             var function_str = $('#function').val();
             $.ajax({
                 type: 'POST',
-                url: '/',
+                url: '/graph',
                 data: {
                     'function': function_str
                 },
@@ -42,7 +42,7 @@
         $('#delete').click(function() {
             $.ajax({
                 type: 'POST',
-                url: '/',
+                url: '/graph',
                 data: {
                     'delete': true
                 },
